@@ -98,7 +98,7 @@ export async function GET(request: Request) {
     const list: DoubanItem[] = doubanData.subjects.map((item) => ({
       id: item.id,
       title: item.title,
-      poster: item.cover,
+      poster: item.cover ? `/api/image-proxy?url=${encodeURIComponent(item.cover)}` : '',
       rate: item.rate,
       year: '',
     }));
@@ -166,13 +166,13 @@ function handleTop250(pageStart: number) {
         const cover = match[3];
         const rate = match[4] || '';
 
-        // 处理图片 URL，确保使用 HTTPS
+        // 处理图片 URL，确保使用 HTTPS，并走代理
         const processedCover = cover.replace(/^http:/, 'https:');
 
         movies.push({
           id: id,
           title: title,
-          poster: processedCover,
+          poster: processedCover ? `/api/image-proxy?url=${encodeURIComponent(processedCover)}` : '',
           rate: rate,
           year: '',
         });
